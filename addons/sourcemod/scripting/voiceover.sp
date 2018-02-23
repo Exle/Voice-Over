@@ -11,7 +11,7 @@ public Plugin myinfo =
 {
 	name	= "Voice-Over",
 	author	= "Exle",
-	version	= "1.0.2.4",
+	version	= "1.0.2.6",
 	url		= "http://steamcommunity.com/id/ex1e/"
 };
 
@@ -22,6 +22,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
+	LoadTranslations("common.phrases");
 	sm_vg_url = CreateConVar("sm_vo_url", "https://tts.voicetech.yandex.net/tts?text={TEXT}");
 	RegAdminCmd("sm_vsay", vSay_Callback, ADMFLAG_ROOT);
 }
