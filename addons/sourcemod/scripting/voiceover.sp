@@ -1,19 +1,28 @@
+#include <sourcemod>
+#tryinclude <base64>
+
+#pragma semicolon 1
 #pragma newdecls required
 
 ConVar sm_vg_url;
+EngineVersion engine;
 
 public Plugin myinfo =
 {
 	name	= "Voice-Over",
 	author	= "Exle",
-	version	= "1.0.1",
+	version	= "1.0.2.4",
 	url		= "http://steamcommunity.com/id/ex1e/"
 };
 
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+	engine = GetEngineVersion();
+}
+
 public void OnPluginStart()
 {
-	sm_vg_url = CreateConVar("sm_vg_url", "http://tts.voicetech.yandex.net/tts?text={TEXT}");
-
+	sm_vg_url = CreateConVar("sm_vg_url", "https://tts.voicetech.yandex.net/tts?text={TEXT}");
 	RegAdminCmd("sm_vsay", vSay_Callback, ADMFLAG_ROOT);
 }
 
@@ -41,21 +50,29 @@ public Action vSay_Callback(int client, int args)
 		return Plugin_Handled;
 	}
 
-	char buffer2[255];
-
-	GetCmdArgString(buffer2, 255);
-	ReplaceString(buffer2, 255, buffer, "");
-
-	TrimString(buffer2);
-	StripQuotes(buffer2);
-
-	if (!buffer2[0])
 	{
-		return Plugin_Handled;
-	}
+		char buffer2[255];
 
-	sm_vg_url.GetString(buffer, 216);
-	ReplaceString(buffer, 216, "{TEXT}", buffer2, false);
+		GetCmdArgString(buffer2, 255);
+		ReplaceString(buffer2, 255, buffer, "");
+
+		TrimString(buffer2);
+		StripQuotes(buffer2);
+
+		if (!buffer2[0])
+		{
+			return Plugin_Handled;
+		}
+
+		sm_vg_url.GetString(buffer, 216);
+		ReplaceString(buffer, 216, "{TEXT}", buffer2, false);
+
+		if (engine == Engine_CSGO)
+		{
+			EncodeBase64(buffer2, 216, buffer);
+			FormatEx(buffer, 216, "https://exle13.github.io/Voice-Over/#%s", buffer2);
+		}
+	}
 
 	for (int i = 0; i < target_count; i++)
 	{
@@ -72,13 +89,13 @@ void PlayUrl(int client, const char[] url)
 		return;
 	}
 
-	KeyValues panel = new KeyValues("data");
+	KeyValues kv = new KeyValues("data");
 
-	panel.SetString("title", "Voice-Over");
-	panel.SetNum("type", MOTDPANEL_TYPE_URL);
+	kv.SetString("title", "Voice-Over");
+	kv.SetNum("type", MOTDPANEL_TYPE_URL);
 
-	panel.SetString("msg", url);
+	kv.SetString("msg", url);
 
-	ShowVGUIPanel(client, "info", panel, false);
-	delete panel;
+	ShowVGUIPanel(client, "info", kv, false);
+	delete kv;
 }

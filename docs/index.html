@@ -1,0 +1,55 @@
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Voice-Over</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script>
+			var Utf8 = {
+				decode : function (utftext) {
+					var string = "";
+					var i = 0;
+					var c = c1 = c2 = 0;
+
+					while ( i < utftext.length ) {
+
+						c = utftext.charCodeAt(i);
+
+						if (c < 128) {
+							string += String.fromCharCode(c);
+							i++;
+						}
+						else if((c > 191) && (c < 224)) {
+							c2 = utftext.charCodeAt(i+1);
+							string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+							i += 2;
+						}
+						else {
+							c2 = utftext.charCodeAt(i+1);
+							c3 = utftext.charCodeAt(i+2);
+							string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+							i += 3;
+						}
+
+					}
+
+					return string;
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var str	= Utf8.decode(atob(window.location.hash.slice(1)));
+			if (str != "") {
+				var audio	= new Audio();
+				audio.src	= str;
+
+				audio.ondurationchange = function()
+				{
+					audio.play();
+				}
+			}
+		</script>
+	</body>
+</html>
