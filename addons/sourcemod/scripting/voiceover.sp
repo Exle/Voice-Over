@@ -22,7 +22,7 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 
 public void OnPluginStart()
 {
-	sm_vg_url = CreateConVar("sm_vg_url", "https://tts.voicetech.yandex.net/tts?text={TEXT}");
+	sm_vg_url = CreateConVar("sm_vo_url", "https://tts.voicetech.yandex.net/tts?text={TEXT}");
 	RegAdminCmd("sm_vsay", vSay_Callback, ADMFLAG_ROOT);
 }
 
