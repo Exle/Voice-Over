@@ -11,7 +11,7 @@ public Plugin myinfo =
 {
 	name	= "Voice-Over",
 	author	= "Exle",
-	version	= "1.0.2.6",
+	version	= "1.0.2.7",
 	url		= "http://steamcommunity.com/id/ex1e/"
 };
 
@@ -71,7 +71,7 @@ public Action vSay_Callback(int client, int args)
 		if (engine == Engine_CSGO)
 		{
 			EncodeBase64(buffer2, 216, buffer);
-			FormatEx(buffer, 216, "https://exle13.github.io/Voice-Over/#%s", buffer2);
+			FormatEx(buffer, 216, "https://exle.github.io/Voice-Over/#%s", buffer2);
 		}
 	}
 
